@@ -1,0 +1,14 @@
+.idea/
+**/node_modules/
+*.zip
+*.psd
+*~
+bower_components/
+build/
+temp/npm-debug.log
+npm-debug.log
+**.swp
+Tickets.iml
+docs/
+public/*
+.vscode

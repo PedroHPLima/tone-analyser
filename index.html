@@ -1,0 +1,263 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="scotchTodo">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>IBM Watson</title>
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#todo-list 				{ margin-bottom:30px; }
+		#todo-form 	 			{ margin-bottom:50px; }
+	</style>
+
+	<!-- SPELLS -->
+	<!-- <script src="node_modules/angular/angular.min.js"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+	<script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
+	<script src="js/controllers/main.js"></script> <!-- load up our controller -->
+	<script src="js/services/todos.js"></script> <!-- load our todo service -->
+	<script src="js/core.js"></script> <!-- load our main application -->
+
+	
+
+</head>
+	<!-- SET THE CONTROLLER -->
+	<body ng-controller="mainController">
+		<div class="container">
+
+			<!-- HEADER AND TODO COUNT -->
+			<div class="jumbotron text-center">
+				<h1><An>Analisador de Tom Emocional</An></span></h1>
+			</div>
+
+			<!-- FORM TO CREATE TODOS -->
+			<div id="todo-form" class="row" ng-if="!spinner">
+				<div class="col-sm-8 col-sm-offset-2 text-center">
+					<form>
+						<div class="form-group">
+							<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+							<!-- <input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text"> -->
+							<textarea class="form-control input-lg" placeholder="Cole seu texto aqui." ng-model="formData.text"></textarea>
+						</div>
+
+						<!-- createToDo() WILL CREATE NEW TODOS -->
+						<button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Analisar</button>
+					</form>
+				</div>
+			</div>
+
+			<dir class="center" ng-if="spinner">
+				<img src="images/default.svg">
+			</dir>
+			
+			<!-- <div class="container text-center">
+				<div class="row" ng-if="!spinner && document != 0">
+
+					<div class="col-sm-4">
+						<h3> {{document.emotionTone.category_name}} </h3>
+						<h3> Tom Emocional </h3>
+						<div ng-repeat="tones in document.emotionTone.tones">
+							<p>{{tones.tone_name}} - {{tones.score}}</p>
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<h3> {{document.languageTone.category_name}} </h3>
+						<h3> Tom de linguagem </h3>
+						<div ng-repeat="tones in document.languageTone.tones">
+							<p>{{tones.tone_name}} - {{tones.score}}</p>
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<h3> {{document.socialTone.category_name}} </h3>
+						<h3> Tom Social </h3>
+						<div ng-repeat="tones in document.socialTone.tones">
+							<p>{{tones.tone_name}} - {{tones.score}}</p>
+						</div>
+					</div>
+	
+				</div>
+			</div> -->
+
+
+
+			<div class="container text-center">
+				<br><h2 class="text-center" ng-show="!spinner && userFinalText.length>0">Análise do texto</h2><br>
+				<div class="row" ng-if="!spinner && document">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-8">
+						<div>
+							<!-- <h3> {{document.emotionTone.category_name}} </h3> -->
+							<h3> {{TranslatedCategories[0]}} </h3>
+							<canvas  	
+								id="bar"  
+								class="chart chart-bar"
+							  	chart-data="emotionScoreArray" 
+							  	chart-labels="emotionalToneNames"
+							  	chart-options="options">
+							</canvas>
+							<p class="chart-text" ng-show="!spinner && userFinalText.length>0"><span class="badge"><= 0.5</span>  Provavelmente não presente </p>
+							<p class="chart-text" ng-show="!spinner && userFinalText.length>0"><span class="badge">>= 0.75</span> Provavelmente muito presente </p>
+						</div>
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+				<br>
+				<div class="row" ng-if="!spinner && document">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-8">
+						<div>
+						<!-- <h3> {{document.languageTone.category_name}} </h3> -->
+						<h3> {{TranslatedCategories[1]}} </h3>
+							<canvas 
+								id="bar"  
+								class="chart chart-bar"
+							  	chart-data="languageScoreArray" 
+							  	chart-labels="languageToneNames"
+							  	chart-options="options">
+							</canvas>
+							<p class="chart-text" ng-show="!spinner && userFinalText.length>0"><span class="badge"><= 0.5</span>  Provavelmente não presente </p>
+							<p class="chart-text" ng-show="!spinner && userFinalText.length>0"><span class="badge">>= 0.75</span> Provavelmente muito presente </p>
+						</div>
+					</div>
+					<div class="col-sm-1"></div>	
+				</div>
+				<br>
+				<div class="row" ng-if="!spinner && document">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-8">
+						<div>
+						<!-- <h3> {{document.languageTone.category_name}} </h3> -->
+						<h3> {{TranslatedCategories[2]}} </h3>
+							<canvas 
+								<canvas 
+								id="bar"  
+								class="chart chart-bar"
+							  	chart-data="socialScoreArray" 
+							  	chart-labels="socialToneNames"
+							  	chart-options="options">
+							</canvas>
+							<p class="chart-text" ng-show="!spinner && userFinalText.length>0"><span class="badge"><= 0.5</span>  Provavelmente não presente </p>
+							<p class="chart-text" ng-show="!spinner && userFinalText.length>0"><span class="badge">>= 0.75</span> Provavelmente muito presente </p>
+						</div>
+					</div>
+					<div class="col-sm-1"></div>	
+				</div>
+
+			</div>	
+
+			<div ng-show="!spinner && userFinalText.length>0">
+				<br><h2 class="text-center">Análise das sentenças</h2><br>
+
+				<div class="row">
+					
+					<div class="btn-group-vertical col-sm-2" role="group">
+						<button type="button" class="btn btn-lg btn-info" disabled>Emocional</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoice('anger')">Raiva</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoice('disgust')">Nojo</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoice('fear')">Medo</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoice('joy')">Alegria</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoice('sadness')">Tristeza</button>
+						<button type="button" class="btn btn-lg btn-primary" disabled>Linguagem</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoicelanguage('analytical')">Analítico</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoicelanguage('confident')">Confiante</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoicelanguage('tentative')">Tentativo</button>
+						<button type="button" class="btn btn-lg btn-success" disabled>Tendência Social</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoiceSocial('openness_big5')">Abertura</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoiceSocial('conscientiousness_big5')">Conscienciosidade</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoiceSocial('extraversion_big5')">Extraversão</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoiceSocial('agreeableness_big5')">Amabilidade</button>
+						<button type="button" class="btn btn-default" ng-click="sentenceChoiceSocial('emotional_range_big5')">Neuroticismo</button><br>
+					</div>
+					<div class="col-sm-10">
+						<div class="info-background" ng-show="toneInfo == 'anger'">
+							<p class="info-text"><b>Raiva:</b> Evocado por injustiça, conflito, humilhação, negligência ou traição. Se a raiva é ativa, o indivíduo ataca o alvo, verbal ou fisicamente. Se a raiva é passiva, a pessoa fica boquiaberta e sente tensão e hostilidade.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'disgust'">
+							<p class="info-text"><b>Nojo:</b> Uma resposta emocional de repulsa a algo considerado ofensivo ou desagradável. É uma sensação que se refere a algo revoltante.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'fear'">
+							<p class="info-text"><b>Medo:</b> Uma resposta ao perigo iminente. É um mecanismo de sobrevivência que é uma reação a algum estímulo negativo. Pode ser uma precaução suave ou uma fobia extrema.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'joy'">
+							<p class="info-text"><b>Alegria:</b> Tem sombras de prazer e satisfação. Há uma sensação de bem-estar, paz interior, amor, segurança e contentamento.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'sadness'">
+							<p class="info-text"><b>Tristeza:</b> Indica um sentimento de perda e desvantagem. Quando uma pessoa pode ser observada em silêncio, menos enérgica e retraída, pode-se inferir que existe tristeza.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'analytical'">
+							<p class="info-text"><b>Analítico:</b> Raciocínio e atitude analítica de uma pessoa sobre as coisas.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'confident'">
+							<p class="info-text"><b>Confiante:</b> O grau de certeza de uma pessoa sobre alguma coisa.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'tentative'">
+							<p class="info-text"><b>Tentativo:</b> O grau de inibição de uma pessoa.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'openness_big5'">
+							<p class="info-text"><b>Abertura:</b> A extensão de uma pessoa está aberta para experimentar uma variedade de atividades.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'conscientiousness_big5'">
+							<p class="info-text"><b>Conscienciosidade:</b> A tendência a agir de forma organizada ou pensativa.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'extraversion_big5'">
+							<p class="info-text"><b>Extraversão:</b> A tendência a buscar estímulo na companhia de outros. Tendem a trabalhar bem em grupo</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'agreeableness_big5'">
+							<p class="info-text"><b>Amabilidade:</b> A tendência a ser compassivo e cooperativo com os outros.</p>
+						</div>
+						<div class="info-background" ng-show="toneInfo == 'emotional_range_big5'">
+							<p class="info-text"><b>Neuroticismo:</b> A tendência para experimentar emoções negativas, como raiva, ansiedade ou depressão. Por vezes é chamada de instabilidade emocional.</p>
+						</div>
+						<br>
+						<p class="text-size" ng-repeat="sentence in userFinalText"> 
+							{{sentence}}
+							<span class="label label-info" ng-show="emotionalSentencesScores!=0" ng-class="{'emocional-none': emotionalSentencesScores[$index] < 0.5, 'emocional-strong': emotionalSentencesScores[$index] > 0.75, 'emocional-medium': (emotionalSentencesScores[$index] >= 0.5 && emotionalSentencesScores[$index] <= 0.75)}">  {{emotionalSentencesScores[$index]}} </span>
+							<span class="label label-primary" ng-show="languageSentencesScores!=0" ng-class="{'language-none': languageSentencesScores[$index] < 0.5, 'language-strong': languageSentencesScores[$index] > 0.75, 'language-medium': (languageSentencesScores[$index] >= 0.5 && languageSentencesScores[$index] <= 0.75)}" >  {{languageSentencesScores[$index]}} </span>
+							<span class="label label-success" ng-show="socialSentencesScores!=0" ng-class="{'social-none': socialSentencesScores[$index] < 0.5, 'social-strong': socialSentencesScores[$index] > 0.75, 'social-medium': (socialSentencesScores[$index] >= 0.5 && socialSentencesScores[$index] <= 0.75)}">  {{socialSentencesScores[$index]}} </span>
+						</p>
+					</div>
+				</div>
+				
+			</div>
+
+		</div> 
+
+		<!-- CHART -->
+		<!-- <div class="chart-container">
+			<canvas 
+				class="chart chart-line"
+				height="80px"
+				chart-data="" 
+				chart-labels=""
+				chart-options="chartOptions"
+				chart-dataset-override="datasetOverride"
+				chart-colors="['#D9534F']">
+			</canvas>
+		</div> -->
+
+		<!-- <div class="chart-container">
+			<canvas 
+				id="bar"  
+				class="chart chart-bar"
+			  	chart-data="data" 
+			  	chart-labels="labels" 
+			  	chart-series="series">
+			</canvas>
+		</div> -->
+
+
+	</body>
+</html>
