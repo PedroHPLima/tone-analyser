@@ -1,0 +1,12 @@
+{
+  "name": "tg-tone-analyzer_cli",
+  "version": "0.0.1",
+  "description": "TG - API Watson example.",
+  "main": "server.js",
+  "author": "Pedro Henrique Pereira Lima",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-chart.js": "^1.1.1",
+    "bootstrap": "^3.3.7"
+  }
+}
